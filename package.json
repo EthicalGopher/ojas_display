@@ -12,7 +12,6 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.115.0",
     "react": "^19.0.0",
     "react-device-mockup": "^1.0.0",
     "react-dom": "^19.0.0"
