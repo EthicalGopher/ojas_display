@@ -1,31 +1,25 @@
 import { useState, useEffect } from 'react';
 import type { NavLink } from '../types';
 import { navLinks } from '../data';
-import { supabase, type ApkRow } from '../lib/supabaseClient';
+import { getContent } from '../lib/contentApi';
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [apkLink, setApkLink] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const client = supabase;
-    if (!client) return;
     const fetchApk = async () => {
-      setLoading(true);
-      const { data, error: fetchError } = await client
-        .from('APK')
-        .select('link')
-        .limit(1);
-      console.log('APK fetch result:', { data, fetchError });
-      if (fetchError) {
+      try {
+        const content = await getContent();
+        setApkLink(content.apkLink);
+      } catch {
         setApkLink(null);
-      } else {
-        const link = (data as ApkRow[] | null)?.[0]?.link ?? null;
-        setApkLink(link);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
+
     fetchApk();
   }, []);
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Kicker } from './ui';
 import { exercises, planPoints } from '../data';
-import { supabase, type ExerciseRow } from '../lib/supabaseClient';
+import { getContent, type ExerciseRow } from '../lib/contentApi';
 import type { Exercise, PlanPoint } from '../types';
 import { ExerciseCard } from './ExerciseCard';
 
@@ -25,30 +25,25 @@ const exerciseGrid = (display: Exercise[]) => (
 
 export const Library = () => {
   const [items, setItems] = useState<Exercise[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(supabase !== null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const client = supabase;
-    if (!client) return;
     const fetchExercises = async () => {
-      setLoading(true);
-      const { data, error: fetchError } = await client
-        .from('exercises')
-        .select('*')
-        .order('display_order', { ascending: true });
-      if (fetchError) {
-        setError(fetchError.message);
+      try {
+        const content = await getContent();
+        setItems(content.exercises.map(mapRow));
+      } catch {
+        setError('Content request failed');
         setItems(null);
-      } else {
-        setItems((data ?? []).map(mapRow));
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
+
     fetchExercises();
   }, []);
 
-  const remote = supabase !== null;
   const display = items ?? exercises;
 
   return (
@@ -93,9 +88,9 @@ export const Library = () => {
             explains the movement and the muscles it targets.
           </p>
         </div>
-        {remote && loading && items === null ? (
+        {loading && items === null ? (
           <p style={{ color: '#b9b9be' }}>Loading exercises…</p>
-        ) : remote && error && items === null ? (
+        ) : error && items === null ? (
           <div
             style={{
               display: 'flex',
@@ -104,7 +99,7 @@ export const Library = () => {
             }}
           >
             <p style={{ color: '#E3522B' }}>
-              Could not load exercises from Supabase. Showing cached data.
+              Could not load the exercise library. Showing cached data.
             </p>
             {exerciseGrid(display)}
           </div>
