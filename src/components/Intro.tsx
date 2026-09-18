@@ -1,22 +1,24 @@
 import { Kicker } from './ui';
-import { introList } from '../data';
+import { introList, sihDetails } from '../data';
 
 export const Intro = () => (
   <section className="intro">
     <div className="container intro-grid">
       <div>
-        <Kicker style={{ color: '#fff' }}>WHY OJAS</Kicker>
+        <Kicker style={{ color: '#fff' }}>
+          {sihDetails.teamName} · INNOVATION FOR EVERYONE
+        </Kicker>
         <h2>
-          TRAIN SOLO.
+          EXERCISE MADE FUN,
           <br />
-          FACE OFF.
+          SAFE AND
           <br />
-          PROGRESS.
+          ACCESSIBLE.
         </h2>
         <p>
-          Choose a focused solo session, challenge an opponent in a head-to-head
-          face-off, or enter a structured competition with up to 10 participants.
-          Every format keeps the goal clear and the next move simple.
+          Most people stop exercising because workouts feel repetitive or lack feedback.
+          Ojas brings live competition, instant form correction, and posture health screening
+          straight to your phone without requiring expensive wearables, sensors, or gym memberships.
         </p>
       </div>
       <div className="intro-list">

@@ -1,18 +1,23 @@
 import { steps } from '../data';
 import type { Step } from '../types';
+import { Kicker } from './ui';
 
 export const HowItWorks = () => (
   <section className="how" id="how">
     <div className="container">
       <div className="section-head">
         <div>
-          <div className="kicker">HOW IT WORKS</div>
+          <Kicker>SIMPLE WORKFLOW</Kicker>
           <h2>
-            FROM GOAL
+            HOW OJAS
             <br />
-            TO PROGRESS.
+            WORKS.
           </h2>
         </div>
+        <p>
+          Getting started takes under ten seconds. Place your phone, choose a mode,
+          and start moving with immediate feedback.
+        </p>
       </div>
       <div className="steps">
         {steps.map((step: Step) => (

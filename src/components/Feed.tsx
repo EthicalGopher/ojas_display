@@ -7,18 +7,18 @@ export const Feed = () => (
     <div className="container">
       <div className="section-head">
         <div>
-          <Kicker>FROM THE OJAS FEED</Kicker>
+          <Kicker>KEY PLATFORM HIGHLIGHTS</Kicker>
           <h2>
-            MEASURE.
+            TRACK.
             <br />
-            IMPROVE.
+            SCREEN.
             <br />
             COMPETE.
           </h2>
         </div>
         <p>
-          Practical guidance, measurable feedback and competitive formats to
-          keep every session focused from setup to score.
+          Instant form checking, 1v1 battle modes, and joint alignment screening
+          designed to keep every workout safe and fun.
         </p>
       </div>
       <div className="feed-grid">
@@ -27,11 +27,13 @@ export const Feed = () => (
             <div className="feed-label">{item.label}</div>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
-            {item.tags.map((tag) => (
-              <div key={tag} className="card-link">
-                {tag}
-              </div>
-            ))}
+            <div className="tags" style={{ marginTop: '20px' }}>
+              {item.tags.map((tag) => (
+                <span key={tag} className="tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
           </article>
         ))}
       </div>

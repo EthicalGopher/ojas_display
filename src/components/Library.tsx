@@ -13,6 +13,7 @@ const mapRow = (row: ExerciseRow): Exercise => ({
   image: row.image_url,
   imageAlt: row.name,
   videoQuery: row.name.replace(/\s+/g, '+') + '+exercise+proper+form',
+  badge: 'Core Workout',
 });
 
 const exerciseGrid = (display: Exercise[]) => (
@@ -32,7 +33,9 @@ export const Library = () => {
     const fetchExercises = async () => {
       try {
         const content = await getContent();
-        setItems(content.exercises.map(mapRow));
+        if (content.exercises && content.exercises.length > 0) {
+          setItems(content.exercises.map(mapRow));
+        }
       } catch {
         setError('Content request failed');
         setItems(null);
@@ -51,16 +54,16 @@ export const Library = () => {
       <div className="container">
         <div className="section-head">
           <div>
-            <Kicker>WORKOUT LIBRARY</Kicker>
+            <Kicker>YOUR APP &amp; TRAINING PLAN</Kicker>
             <h2>
-              MOVE WITH
+              TRAIN WITH
               <br />
-              PURPOSE.
+              CLEAR PURPOSE.
             </h2>
           </div>
           <p>
-            Your plan brings profile context, workout filters, movement targets
-            and session controls into one clear training feed.
+            Your app brings your profile, custom workout filters, posture targets,
+            and real-time feedback together into one simple feed.
           </p>
         </div>
         <div className="plan-feature">
@@ -78,18 +81,17 @@ export const Library = () => {
           </div>
         </div>
         <div className="exercise-intro">
-          <Kicker>EXERCISE LIBRARY</Kicker>
+          <Kicker>EXERCISE &amp; YOGA LIBRARY</Kicker>
           <h3>
-            Choose your movement. Understand its focus. Start your session with
-            clarity.
+            Pick your exercise. Check your posture. Train with real-time feedback.
           </h3>
           <p>
-            The same exercise demonstrations stay in place while each card
-            explains the movement and the muscles it targets.
+            Choose from a wide variety of strength exercises and yoga routines.
+            Every exercise card shows you the right form and target muscle areas.
           </p>
         </div>
         {loading && items === null ? (
-          <p style={{ color: '#b9b9be' }}>Loading exercises…</p>
+          <p style={{ color: '#b9b9be' }}>Loading exercises...</p>
         ) : error && items === null ? (
           <div
             style={{

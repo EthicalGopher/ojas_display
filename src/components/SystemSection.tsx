@@ -3,20 +3,22 @@ import { systemCards } from '../data';
 import type { SystemCard } from '../types';
 
 export const SystemSection = () => (
-  <section className="system" id="programs">
+  <section className="system" id="pillars">
     <div className="container">
       <div className="section-head">
         <div>
-          <Kicker>THE OJAS SYSTEM</Kicker>
+          <Kicker>THE THREE CORE PILLARS</Kicker>
           <h2>
-            BUILT AROUND
+            SMART.
             <br />
-            YOUR TRAINING.
+            COMPETITIVE.
+            <br />
+            HEALTHY.
           </h2>
         </div>
         <p>
-          Everything important stays in one place — from your first workout to
-          your next personal best.
+          Everything you need to train with accurate form, challenge your friends,
+          and protect your body — all in one simple mobile app.
         </p>
       </div>
       <div className="system-grid">

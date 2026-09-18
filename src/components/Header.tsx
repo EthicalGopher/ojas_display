@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import type { NavLink } from '../types';
-import { navLinks } from '../data';
+import { navLinks, projectLinks, sihDetails } from '../data';
 import { getContent } from '../lib/contentApi';
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [apkLink, setApkLink] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [apkLink, setApkLink] = useState<string>(projectLinks.apk);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchApk = async () => {
+      setLoading(true);
       try {
         const content = await getContent();
-        setApkLink(content.apkLink);
+        if (content.apkLink) {
+          setApkLink(content.apkLink);
+        }
       } catch {
-        setApkLink(null);
+        // Keep default APK link
       } finally {
         setLoading(false);
       }
@@ -24,17 +27,32 @@ export const Header = () => {
   }, []);
 
   const handleDownload = () => {
-    const link = apkLink;
-    if (!link) return;
-    window.open(link, '_blank', 'noopener,noreferrer,noreferer');
+    window.open(apkLink, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <header className="nav">
       <div className="container nav-inner">
-        <a href="#" className="logo">
-          OJAS
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <a href="#" className="logo">
+            OJAS
+          </a>
+          <span
+            style={{
+              fontSize: '11px',
+              background: '#37373a',
+              border: '1px solid rgba(255,255,255,0.18)',
+              padding: '3px 8px',
+              borderRadius: '4px',
+              color: '#fff',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+            }}
+          >
+            {sihDetails.teamName} · SIH 2026
+          </span>
+        </div>
+
         <nav
           className="nav-links"
           style={{
@@ -59,24 +77,27 @@ export const Header = () => {
             </a>
           ))}
         </nav>
-        <button
-          type="button"
-          className="nav-download"
-          onClick={handleDownload}
-          disabled={loading || !apkLink}
-          aria-label={apkLink ? 'Download OJAS APK' : 'APK not available'}
-        >
-          {loading ? 'Loading…' : 'DOWNLOAD APK'}
-        </button>
-        <button
-          type="button"
-          className="menu"
-          onClick={() => setMenuOpen((open) => !open)}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-        >
-          ☰
-        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button
+            type="button"
+            className="nav-download"
+            onClick={handleDownload}
+            disabled={loading}
+            aria-label="Download OJAS APK"
+          >
+            {loading ? 'Loading...' : 'DOWNLOAD APK'}
+          </button>
+          <button
+            type="button"
+            className="menu"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            MENU
+          </button>
+        </div>
       </div>
     </header>
   );

@@ -1,28 +1,35 @@
 import { BtnLink, Kicker } from './ui';
 import { HeroPhoneMockup } from './HeroPhoneMockup';
-import { heroStats } from '../data';
+import { heroStats, projectLinks, sihDetails } from '../data';
 
 export const Hero = () => (
-  <section className="hero">
+  <section className="hero" id="overview">
     <div className="container hero-grid">
       <div>
-        <Kicker>OJAS / MOVEMENT INTELLIGENCE</Kicker>
+        <Kicker>
+          {sihDetails.event} · {sihDetails.problemId}
+        </Kicker>
         <h1>
-          TRAIN HARDER.
+          GAMIFIED FITNESS.
           <br />
-          MOVE BETTER.
+          REAL-TIME FORM.
+          <br />
+          HEALTH SCREENING.
         </h1>
         <p className="hero-copy">
-          Personalized training, precise movement guidance and structured
-          workouts designed to help you train with confidence and progress
-          consistently.
+          Ojas turns your phone camera into your personal workout coach.
+          Count your reps automatically, fix your form with live tips,
+          check your posture health, and challenge your friends in fun fitness battles.
         </p>
         <div className="hero-actions">
-          <BtnLink href="#workouts" variant="primary">
-            START TRAINING →
+          <BtnLink href={projectLinks.apk} variant="primary">
+            DOWNLOAD APK &rarr;
           </BtnLink>
-          <BtnLink href="#workouts" variant="secondary">
-            EXPLORE WORKOUTS →
+          <BtnLink href={projectLinks.video} variant="secondary">
+            WATCH DEMO VIDEO &rarr;
+          </BtnLink>
+          <BtnLink href={projectLinks.github} variant="secondary">
+            GITHUB REPOSITORY &rarr;
           </BtnLink>
         </div>
         <div className="hero-stats">

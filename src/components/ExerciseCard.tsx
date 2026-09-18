@@ -10,8 +10,7 @@ export const VideoButton = ({ query }: { query: string }) => (
     target="_blank"
     rel="noopener noreferrer"
   >
-    <span className="play-icon">▶</span>
-    WATCH VIDEO
+    WATCH FORM VIDEO &rarr;
   </a>
 );
 
@@ -21,6 +20,7 @@ export const ExerciseCard = ({ exercise }: { exercise: Exercise }) => (
       <img src={exercise.image} alt={exercise.imageAlt} />
     </div>
     <div className="exercise-body">
+      {exercise.badge && <div className="badge-tag">{exercise.badge}</div>}
       <h3>{exercise.title}</h3>
       <div className="meta">{exercise.meta}</div>
       <p>{exercise.description}</p>

@@ -11,6 +11,7 @@ export type Exercise = {
   image: string;
   imageAlt: string;
   videoQuery: string;
+  badge?: string;
 };
 
 export type SystemCard = {
@@ -49,4 +50,20 @@ export type FeedItem = {
 export type FooterColumn = {
   title: string;
   links: { label: string; href: string }[];
+};
+
+export type GameMode = {
+  id: string;
+  title: string;
+  players: string;
+  description: string;
+  badge: string;
+};
+
+export type HealthFeature = {
+  id: string;
+  title: string;
+  tag: string;
+  description: string;
+  solution: string;
 };
