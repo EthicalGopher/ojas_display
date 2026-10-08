@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { ScrollSmoother } from '../lib/motion';
 
 const IntroScene = lazy(() => import('../three/IntroScene'));
 const PUSHER_READY_EVENT = 'ojas:pusher-ready';
@@ -7,6 +8,8 @@ const PUSHER_WAIT_MS = 3500;
 
 /** Fired by the 3D scene once the athlete model is on screen. */
 export const READY_EVENT = 'ojas:ready';
+/** Fired as the curtain starts to lift, so the hero can play its entrance. */
+export const INTRO_DONE_EVENT = 'ojas:intro-done';
 
 const MIN_MS = 4600;
 const MAX_MS = 9000;
@@ -66,6 +69,7 @@ export const Intro = () => {
       return;
     }
     document.documentElement.style.overflow = 'hidden';
+    ScrollSmoother.get()?.paused(true);
     const onReady = () => {
       ready.current = true;
     };
@@ -94,9 +98,11 @@ export const Intro = () => {
 
   useEffect(() => {
     if (phase !== 'leave') return;
+    window.dispatchEvent(new Event(INTRO_DONE_EVENT));
     const id = window.setTimeout(() => {
       setPhase('done');
       document.documentElement.style.overflow = '';
+      ScrollSmoother.get()?.paused(false);
     }, 1100);
     return () => window.clearTimeout(id);
   }, [phase]);

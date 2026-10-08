@@ -9,6 +9,10 @@ const PUSHER_URL = '/models/pusher.glb';
 export const PUSHER_READY_EVENT = 'ojas:pusher-ready';
 
 const HEIGHT = 1.8;
+/** World units visible top to bottom: his height plus a little headroom. */
+const VIEW_HEIGHT = 2.0;
+/** How far in front of his hips his hands land, so they touch the canvas's right edge. */
+const HANDS_REACH = 0.72;
 
 const Pusher = () => {
   const { scene, animations } = useGLTF(PUSHER_URL);
@@ -54,14 +58,17 @@ const Pusher = () => {
   return <primitive object={scene} />;
 };
 
-/** Frames the crouched push (about 1.3 units tall) with his hands at the right edge. */
+/**
+ * Frames his full standing height (the push clip goes from a crouch to upright),
+ * feet on the bottom edge and hands at the right edge.
+ */
 const Framing = () => {
   const camera = useThree((st) => st.camera) as OrthographicCamera;
   const size = useThree((st) => st.size);
   useLayoutEffect(() => {
     if (!size.height) return;
-    camera.zoom = size.height / 1.42;
-    camera.position.set(-(size.width / camera.zoom) / 2 + 0.7, 0.69, 6);
+    camera.zoom = size.height / VIEW_HEIGHT;
+    camera.position.set(-(size.width / camera.zoom) / 2 + HANDS_REACH, VIEW_HEIGHT / 2 - 0.02, 6);
     camera.rotation.set(0, 0, 0); // undo R3F's initial lookAt(0,0,0): look straight down -z
     camera.updateProjectionMatrix();
   }, [camera, size]);

@@ -1,7 +1,9 @@
-import { Suspense, lazy, useCallback, useEffect, useRef } from 'react';
+import { Suspense, lazy, useCallback, useRef } from 'react';
 import { BtnLink, Kicker } from './ui';
 import { heroCapabilities, heroStats, projectLinks, sihDetails } from '../data';
 import { scrollState } from '../lib/scroll';
+import { SplitText, gsap, reducedMotion, useGSAP } from '../lib/motion';
+import { INTRO_DONE_EVENT } from './Intro';
 import { useInView } from '../three/useInView';
 import type { PoseStats } from '../three/pose';
 
@@ -118,32 +120,43 @@ export const Hero = () => {
     }
   }, []);
 
-  // scroll progress through the pinned hero drives the camera orbit and the headline split
   const section = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = section.current;
-    if (!el) return;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const r = el.getBoundingClientRect();
-      const span = r.height - window.innerHeight;
-      const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-      scrollState.hero = p;
-      el.style.setProperty('--p', p.toFixed(3));
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+
+  useGSAP(
+    () => {
+      if (reducedMotion()) return;
+      // pinned while the camera orbits; the headline splits apart and the corners clear away
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: section.current,
+            start: 'top top',
+            end: '+=90%',
+            pin: true,
+            scrub: 1,
+            onUpdate: (self) => {
+              scrollState.hero = self.progress;
+            },
+          },
+        })
+        .to('.hero-giant .left', { xPercent: -45, autoAlpha: 0, ease: 'none' }, 0)
+        .to('.hero-giant .right', { xPercent: 45, autoAlpha: 0, ease: 'none' }, 0)
+        .to('.hero-corner.tl, .hero-corner.tr', { y: -60, autoAlpha: 0, ease: 'none' }, 0)
+        .to('.scroll-cue', { autoAlpha: 0, duration: 0.2, ease: 'none' }, 0);
+
+      // entrance once the intro curtain lifts: letters rise out of a mask, then the furniture
+      const split = SplitText.create('.hero-giant span', { type: 'chars', mask: 'chars' });
+      const enter = gsap
+        .timeline({ paused: true })
+        .from(split.chars, { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.025 })
+        .from('.hero-corner, .hud-card, .scroll-cue', { y: 30, autoAlpha: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08 }, 0.35);
+      const play = () => enter.play();
+      if (document.querySelector('.intro')) window.addEventListener(INTRO_DONE_EVENT, play, { once: true });
+      else play();
+      return () => window.removeEventListener(INTRO_DONE_EVENT, play);
+    },
+    { scope: section },
+  );
 
   return (
     <section className="hero-cine" id="overview" ref={section}>

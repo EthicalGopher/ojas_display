@@ -1,4 +1,5 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
+import { SplitText, gsap, reducedMotion, useGSAP } from '../lib/motion';
 
 export type BtnProps = {
   href?: string;
@@ -62,17 +63,48 @@ export const SectionHead = ({
   kicker: string;
   title: ReactNode;
   children?: ReactNode;
-}) => (
-  <Reveal className="section-head">
-    <div>
-      <Kicker>{kicker}</Kicker>
-      <h2>{title}</h2>
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  // each heading line slides up out of its own mask as the section arrives
+  useGSAP(
+    () => {
+      if (reducedMotion()) return;
+      SplitText.create('h2', {
+        type: 'lines',
+        mask: 'lines',
+        autoSplit: true,
+        onSplit: (self) =>
+          gsap.from(self.lines, {
+            yPercent: 110,
+            duration: 1.1,
+            ease: 'expo.out',
+            stagger: 0.09,
+            scrollTrigger: { trigger: ref.current, start: 'top 85%', once: true },
+          }),
+      });
+      gsap.from('.kicker, p', {
+        y: 24,
+        autoAlpha: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.1,
+        scrollTrigger: { trigger: ref.current, start: 'top 85%', once: true },
+      });
+    },
+    { scope: ref },
+  );
+  return (
+    <div className="section-head" ref={ref}>
+      <div>
+        <Kicker>{kicker}</Kicker>
+        <h2>{title}</h2>
+      </div>
+      {children && <p>{children}</p>}
     </div>
-    {children && <p>{children}</p>}
-  </Reveal>
-);
+  );
+};
 
-/** Fades its children up the first time they scroll into view. */
+/** Rises into place the first time it scrolls into view. */
 export const Reveal = ({
   as: Tag = 'div',
   className,
@@ -86,28 +118,19 @@ export const Reveal = ({
   children: ReactNode;
 } & Record<string, unknown>) => {
   const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          node.classList.add('in');
-          io.disconnect();
-        }
-      },
-      { rootMargin: '0px 0px -8% 0px' },
-    );
-    io.observe(node);
-    return () => io.disconnect();
-  }, []);
+  useGSAP(() => {
+    if (reducedMotion() || !ref.current) return;
+    gsap.from(ref.current, {
+      y: 48,
+      autoAlpha: 0,
+      duration: 1,
+      delay: delay / 1000,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: ref.current, start: 'top 90%', once: true },
+    });
+  });
   return (
-    <Tag
-      ref={ref as never}
-      className={`reveal${className ? ` ${className}` : ''}`}
-      style={{ transitionDelay: `${delay}ms` }}
-      {...rest}
-    >
+    <Tag ref={ref as never} className={className} {...rest}>
       {children}
     </Tag>
   );

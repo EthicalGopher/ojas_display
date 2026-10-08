@@ -1,4 +1,5 @@
 import { Header } from './components/Header';
+import { ScrollSmoother, reducedMotion, scrollToHash, useGSAP } from './lib/motion';
 import { Intro } from './components/Intro';
 import { WordTunnel } from './components/WordTunnel';
 import { Hero } from './components/Hero';
@@ -15,25 +16,51 @@ import { FooterCta } from './components/FooterCta';
 import { Footer } from './components/Footer';
 
 const App = () => {
+  // GSAP ScrollSmoother replaces native scrolling; the fixed header and intro sit outside it
+  useGSAP(() => {
+    if (reducedMotion()) return;
+    ScrollSmoother.create({
+      wrapper: '#smooth-wrapper',
+      content: '#smooth-content',
+      smooth: 1.25,
+      smoothTouch: 0.12,
+      effects: true,
+      normalizeScroll: true,
+    });
+    // in-page links go through the smoother so they glide instead of jumping
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+      if (!link) return;
+      e.preventDefault();
+      scrollToHash(link.getAttribute('href') ?? '#');
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  });
+
   return (
     <>
       <Intro />
       <Header />
-      <main>
-        <Hero />
-        <Ticker />
-        <WordTunnel />
-        <SystemSection />
-        <AppScreens />
-        <GameModes />
-        <Ranks />
-        <HealthSection />
-        <Library />
-        <HowItWorks />
-        <Updates />
-        <FooterCta />
-      </main>
-      <Footer />
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          <main>
+            <Hero />
+            <Ticker />
+            <WordTunnel />
+            <SystemSection />
+            <AppScreens />
+            <GameModes />
+            <Ranks />
+            <HealthSection />
+            <Library />
+            <HowItWorks />
+            <Updates />
+            <FooterCta />
+          </main>
+          <Footer />
+        </div>
+      </div>
     </>
   );
 };
