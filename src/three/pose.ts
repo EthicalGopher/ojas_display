@@ -33,8 +33,8 @@ export const BODY_SEGMENTS: { a: number; b: number; r: number; n: number }[] = [
   { a: 12, b: 24, r: 0.09, n: 220 },
 ];
 
-export type Exercise = 'squat' | 'skip' | 'curl' | 'swing' | 'balance' | 'scan';
-/** `cycle` plays squat → skipping → curls → kettlebell swings → balance hold on a loop. */
+export type Exercise = 'squat' | 'skip' | 'curl' | 'swing' | 'scan';
+/** `cycle` plays squat → skipping → curls → kettlebell swings on a loop. */
 export type PoseMode = Exercise | 'cycle';
 
 export type PoseStats = {
@@ -48,12 +48,10 @@ export type PoseStats = {
   reps: number;
   /** Rope rotation in radians (skipping only). */
   ropePhase: number;
-  /** Seconds held steady (balance only). */
-  hold?: number;
 };
 
-export const PERIOD: Record<Exercise, number> = { squat: 2.6, skip: 0.62, curl: 1.9, swing: 2.6, balance: 2, scan: 1 };
-export const CYCLE: Exercise[] = ['squat', 'skip', 'curl', 'swing', 'balance'];
+export const PERIOD: Record<Exercise, number> = { squat: 2.6, skip: 0.62, curl: 1.9, swing: 2.6, scan: 1 };
+export const CYCLE: Exercise[] = ['squat', 'skip', 'curl', 'swing'];
 export const SEGMENT = 9;
 const BLEND = 0.9;
 
@@ -136,8 +134,8 @@ const placeHead = (p: Vector3[], sy: number, sz: number, lean: number) => {
 
 /** Writes the 33 landmarks for one exercise at local time `t`. */
 const poseExercise = (p: Vector3[], t: number, which: Exercise): PoseStats => {
-  // the stick-figure fallback has no swing or balance of its own; stand-ins until the model loads
-  const ex = which === 'swing' ? 'squat' : which === 'balance' ? 'scan' : which;
+  // the stick-figure fallback has no swing of its own; squats stand in until the model loads
+  const ex = which === 'swing' ? 'squat' : which;
   const period = PERIOD[ex];
   const phase = (t % period) / period;
   const breathe = Math.sin(t * 1.6) * 0.006;

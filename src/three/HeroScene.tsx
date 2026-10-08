@@ -30,7 +30,6 @@ const SHOTS: Record<string, Shot> = {
   skip: { pos: [0.25, 0.42, 3.5], look: [0, 0.95, 0] }, // low front: the rope sweeps past the lens
   curl: { pos: [-1.7, 1.38, 2.45], look: [0.05, 1.1, 0] }, // close on the arms and dumbbells
   swing: { pos: [2.9, 0.75, 1.4], look: [0, 0.8, 0] }, // side-on: the hip hinge and bell arc
-  balance: { pos: [-1.2, 1.0, 3.2], look: [0, 0.95, 0] }, // three-quarter front: the standing leg and raised knee
   scan: { pos: [0, 1.15, 3.9], look: [0, 0.9, 0] },
 };
 

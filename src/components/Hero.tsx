@@ -54,15 +54,6 @@ const EXERCISE_HUD: Record<PoseStats['exercise'], HudInfo> = {
     format: (s) => `${Math.round(s.angle)}°`,
     phase: (s) => (s.progress > 0.6 ? 'Hinge' : 'Snap'),
   },
-  balance: {
-    num: '05',
-    name: 'Balance hold',
-    sub: 'Motion generated with UniMate · hold timer',
-    metric: 'Hold',
-    progress: 'Knee lift',
-    format: (s) => `${(s.hold ?? 0).toFixed(1)} s`,
-    phase: (s) => (s.progress > 0.4 ? 'Holding' : 'Settle'),
-  },
   scan: {
     num: '00',
     name: 'Posture scan',

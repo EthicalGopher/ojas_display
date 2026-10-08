@@ -21,15 +21,6 @@ import { CYCLE, SEGMENT, body, type Exercise, type PoseStats } from './pose';
  */
 export const ATHLETE_URL = '/models/athlete.glb';
 
-/**
- * Joint positions per frame for the balance hold, generated with UniMate
- * (text-to-motion for any rig) from "An object does a yoga pose, balancing on
- * one leg." on this same skeleton. See scripts/README-athlete.md.
- */
-const BALANCE_URL = '/models/balance.json';
-type BalanceClip = { fps: number; frames: Record<string, [number, number, number]>[] };
-const BALANCE_BLEND = 0.7;
-
 /** Target height of the model in scene units (matches the pose engine). */
 const HEIGHT = 1.7;
 const FADE = 0.6;
@@ -155,10 +146,6 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
 
     if (!bones.Hips) return;
     const p = (name: string) => bones[name].getWorldPosition(new Vector3());
-    measured.current = {
-      leg: p('LeftUpLeg').distanceTo(p('LeftLeg')) + p('LeftLeg').distanceTo(p('LeftFoot')),
-      ankleY: p('LeftFoot').y,
-    };
     if (mode !== 'drive') return;
     const d = (a: string, c: string) => p(a).distanceTo(p(c));
     body.thigh = d('LeftUpLeg', 'LeftLeg');
@@ -172,25 +159,6 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
     body.torso = shoulderY - (p('LeftUpLeg').y + p('RightUpLeg').y) / 2;
     body.neck = p('Head').y - shoulderY + 0.06;
   }, [scene, bones, mode]);
-
-  const measured = useRef({ leg: 0.8, ankleY: 0.08 });
-
-  // UniMate balance clip, rescaled to this body once both are loaded
-  const balance = useRef<BalanceClip | null>(null);
-  useEffect(() => {
-    if (mode !== 'clips') return;
-    let live = true;
-    fetch(BALANCE_URL)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((clip: BalanceClip | null) => {
-        if (live && clip?.frames?.length) balance.current = clip;
-      })
-      .catch(() => {});
-    return () => {
-      live = false;
-    };
-  }, [mode]);
-  const balanceFrom = useMemo(() => Array.from({ length: 33 }, () => new Vector3()), []);
 
   const track = useRef({
     current: '' as Exercise | '',
@@ -227,10 +195,9 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
   };
 
   /** Bend bones, parents first, from rest toward the pose engine's landmarks. */
-  const drive = (resetAll = false) => {
+  const drive = () => {
     const hips = bones.Hips;
     if (!hips) return;
-    if (resetAll) rest.forEach((q, b) => b.quaternion.copy(q));
     point('hips', tmp.hips);
     hips.quaternion.copy(rest.get(hips)!);
     if (hips.parent) {
@@ -281,40 +248,6 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
     }
   };
 
-  /** Landmarks from the UniMate clip at time `t`, ping-ponged so the 2 s clip loops smoothly. */
-  const balanceLandmarks = (clip: BalanceClip, t: number) => {
-    const n = clip.frames.length;
-    const span = (n - 1) * 2;
-    let f = (t * clip.fps * 0.6) % span;
-    if (f > n - 1) f = span - f;
-    const i0 = Math.floor(f);
-    const i1 = Math.min(n - 1, i0 + 1);
-    const a = f - i0;
-    const f0 = clip.frames[0];
-    const standY = Math.min(f0.LeftFoot[1], f0.RightFoot[1]);
-    const k = (measured.current.leg * 0.97) / (f0.Hips[1] - standY);
-    const pos = (bone: string, out: Vector3) => {
-      const p = clip.frames[i0][bone];
-      const q = clip.frames[i1][bone];
-      if (!p || !q) return out;
-      return out.set(
-        (p[0] + (q[0] - p[0]) * a) * k,
-        (p[1] + (q[1] - p[1]) * a - standY) * k + measured.current.ankleY,
-        (p[2] + (q[2] - p[2]) * a) * k,
-      );
-    };
-    for (const [idx, name] of Object.entries(LANDMARK_BONES)) pos(name, landmarks[+idx]);
-    pos('Hips', tmp.hips);
-    // keep the hip landmarks either side of the hips bone
-    landmarks[23].y = landmarks[24].y = Math.min(landmarks[23].y, tmp.hips.y);
-    pos('Head', tmp.c);
-    for (const [idx, [x, y, z]] of Object.entries(FACE)) landmarks[+idx].set(tmp.c.x + x, tmp.c.y + y, tmp.c.z + z);
-    for (const [heel, ankle] of [
-      [29, 27],
-      [30, 28],
-    ]) landmarks[heel].copy(landmarks[ankle]).add(tmp.a.set(0, -0.05, -0.05));
-  };
-
   useFrame(({ clock }, delta) => {
     if (mode === 'drive') {
       drive();
@@ -323,50 +256,19 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
     const t = clock.getElapsedTime();
     const ex = CYCLE[Math.floor(t / SEGMENT) % CYCLE.length];
     const tr = track.current;
-    const clip = balance.current;
-    const balancing = ex === 'balance' && clip !== null;
     if (ex !== tr.current) {
-      const next = balancing ? undefined : actions[ex];
+      const next = actions[ex];
       const prev = tr.current ? actions[tr.current] : undefined;
-      if (balancing) {
-        // hand over from mocap to the generated clip: freeze where we are, then blend landmarks
-        mixer.stopAllAction();
-        landmarks.forEach((v, i) => balanceFrom[i].copy(v));
-      } else if (next) {
+      if (next) {
         next.reset().setEffectiveWeight(1).play();
-        if (prev?.isRunning()) prev.crossFadeTo(next, FADE, false);
-        else next.fadeIn(FADE);
+        if (prev) prev.crossFadeTo(next, FADE, false);
       }
       tr.current = ex;
       tr.reps = 0;
       tr.armed = false;
     }
-    if (balancing) {
-      const local = t % SEGMENT;
-      balanceLandmarks(clip, local);
-      if (local < BALANCE_BLEND) {
-        const k = local / BALANCE_BLEND;
-        const e = k * k * (3 - 2 * k);
-        landmarks.forEach((v, i) => v.lerpVectors(balanceFrom[i], v, e));
-      }
-      drive(true);
-      // plant the standing foot: drop the hips until the lower ankle is back on the floor
-      const hipsBone = bones.Hips;
-      if (hipsBone?.parent && bones.LeftFoot && bones.RightFoot) {
-        const low = Math.min(bones.LeftFoot.getWorldPosition(tmp.a).y, bones.RightFoot.getWorldPosition(tmp.c).y);
-        const drop = low - measured.current.ankleY;
-        if (drop > 0) {
-          hipsBone.getWorldPosition(tmp.hips).y -= drop;
-          hipsBone.position.copy(hipsBone.parent.worldToLocal(tmp.hips));
-          hipsBone.updateMatrixWorld(true);
-        }
-      }
-      // re-read from the driven bones so the overlay sits on this body, not the generated rig
-      read();
-    } else {
-      mixer.update(Math.min(delta, 0.1));
-      read();
-    }
+    mixer.update(Math.min(delta, 0.1));
+    read();
 
     // live stats, measured from the landmarks like the app does
     const hipY = (landmarks[23].y + landmarks[24].y) / 2;
@@ -386,16 +288,9 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
       const r = angleAt(landmarks[14], landmarks[12], landmarks[16]);
       angle = Math.min(l, r);
       progress = (165 - angle) / 125;
-    } else if (ex === 'swing') {
+    } else {
       angle = angleAt(landmarks[23], landmarks[11], landmarks[25]);
       progress = (180 - angle) / 90;
-    } else {
-      // balance: how high the free foot is held, and the standing knee's lockout
-      const free = Math.max(landmarks[27].y, landmarks[28].y) - Math.min(landmarks[27].y, landmarks[28].y);
-      progress = free / 0.35;
-      angle = landmarks[27].y < landmarks[28].y
-        ? angleAt(landmarks[25], landmarks[23], landmarks[27])
-        : angleAt(landmarks[26], landmarks[24], landmarks[28]);
     }
     progress = Math.min(1, Math.max(0, progress));
 
@@ -425,7 +320,6 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
     out.segmentTime = t % SEGMENT;
     out.reps = tr.reps;
     out.ropePhase = ropePhase;
-    out.hold = ex === 'balance' ? Math.max(0, (t % SEGMENT) - BALANCE_BLEND) : 0;
     onStats?.(out);
   }, -1);
 

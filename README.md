@@ -22,15 +22,9 @@ and used under Adobe's Mixamo terms.
 - `public/models/athlete.glb`: Jody with Air Squat, Jumping Rope, Bicep Curl,
   Kettlebell Swing, Push Up, Jumping Jacks and Warming Up.
 - `public/models/pusher.glb`: Adam with Pushing (the intro).
-- `public/models/balance.json`: per-frame joint positions for the balance hold,
-  generated with [UniMate](https://github.com/Friedrich-M/UniMate) (MIT) from
-  the prompt "An object does a yoga pose, balancing on one leg." on Jody's rig.
 
 Rebuild a model with Blender (textures are downsized to 1024 px WebP):
 
 ```bash
 blender -b --python scripts/build-athlete.py -- Adam.glb public/models/pusher.glb push=Pushing.fbx
 ```
-
-`scripts/extract-unimate-motion.py` turns a UniMate-animated GLB into the
-joint-position JSON the site reads.
