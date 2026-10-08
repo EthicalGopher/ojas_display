@@ -1,34 +1,41 @@
-import { Kicker } from './ui';
+import { Reveal, SectionHead } from './ui';
 import { gameModes } from '../data';
 import type { GameMode } from '../types';
 
 export const GameModes = () => (
-  <section className="modes-section" id="modes" style={{ background: '#2B2B2E' }}>
+  <section className="modes-section" id="modes">
     <div className="container">
-      <div className="section-head">
-        <div>
-          <Kicker>COMPETITION AND TRAINING MODES</Kicker>
-          <h2>
-            CHOOSE HOW
+      <SectionHead
+        kicker="Game modes"
+        title={
+          <>
+            Six ways
             <br />
-            YOU TRAIN.
-          </h2>
-        </div>
-        <p>
-          Whether you want a peaceful solo routine, guided instruction from an AI Tutor,
-          or a fast-paced multiplayer battle with up to 10 friends, Ojas has a mode ready for you.
-        </p>
-      </div>
+            to <em>play.</em>
+          </>
+        }
+      >
+        Train quietly on your own, follow an AI Tutor, or step into a live match. Matchmaking
+        never leaves you waiting: if nobody is free, a level-matched opponent steps in.
+      </SectionHead>
       <div className="modes-grid">
-        {gameModes.map((mode: GameMode) => (
-          <article key={mode.id} className="mode-card">
+        {gameModes.map((mode: GameMode, i) => (
+          <Reveal as="article" key={mode.id} className="mode-card" delay={(i % 3) * 90}>
             <div className="mode-header">
-              <span className="mode-badge">{mode.badge}</span>
+              <span className="mode-idx">M.{String(i + 1).padStart(2, '0')}</span>
               <span className="mode-players">{mode.players}</span>
             </div>
             <h3>{mode.title}</h3>
             <p>{mode.description}</p>
-          </article>
+            {mode.details && (
+              <div className="mode-details">
+                {mode.details.map((d) => (
+                  <span key={d}>{d}</span>
+                ))}
+              </div>
+            )}
+            <span className="mode-badge">{mode.badge}</span>
+          </Reveal>
         ))}
       </div>
     </div>

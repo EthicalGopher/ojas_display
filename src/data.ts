@@ -1,14 +1,17 @@
 import type {
+  AppScreen,
   Exercise,
-  SystemCard,
-  PlanPoint,
-  Step,
-  StatItem,
-  FeedItem,
   FooterColumn,
-  NavLink,
   GameMode,
   HealthFeature,
+  NavLink,
+  ProgressionFeature,
+  RankTier,
+  ReleaseNote,
+  StatItem,
+  Step,
+  SystemCard,
+  TechItem,
 } from './types';
 
 export const sihDetails = {
@@ -30,370 +33,414 @@ export const projectLinks = {
 };
 
 export const navLinks: NavLink[] = [
-  { label: 'Overview', href: '#overview' },
-  { label: 'Pillars', href: '#pillars' },
-  { label: 'Game Modes', href: '#modes' },
-  { label: 'Workouts', href: '#workouts' },
-  { label: 'Health Check', href: '#health' },
-  { label: 'How It Works', href: '#how' },
+  { label: 'Engine', href: '#pillars' },
+  { label: 'App', href: '#screens' },
+  { label: 'Modes', href: '#modes' },
+  { label: 'Ranks', href: '#ranks' },
+  { label: 'Scanner', href: '#health' },
+  { label: 'Library', href: '#workouts' },
+  { label: 'Updates', href: '#updates' },
 ];
 
 export const heroStats: StatItem[] = [
-  { value: '6', label: 'Workout Modes', detail: 'Solo, AI Tutor, AI Dual, 1v1, Battleground, Friends' },
-  { value: '100%', label: 'Private & Secure', detail: 'Camera video stays strictly on your phone' },
-  { value: '0', label: 'Extra Gear Needed', detail: 'Works with the phone camera you already have' },
-  { value: 'Offline', label: 'Works Anywhere', detail: 'Track your reps even without an internet connection' },
+  { value: '33', label: 'Body landmarks', detail: 'Tracked live by MediaPipe Pose on the phone GPU' },
+  { value: '6', label: 'Ways to play', detail: 'Solo, AI Tutor, Human vs AI, Quick Duel, Battle Ground, Friends' },
+  { value: '0', label: 'Frames uploaded', detail: 'Camera video never leaves your phone' },
+  { value: '6', label: 'Rank tiers', detail: 'Bronze to Immortal' },
 ];
 
-export const introList: string[] = [
-  '01 — SMART CAMERA POSE TRACKING',
-  '02 — AUTOMATIC REP COUNTING',
-  '03 — INSTANT FORM CORRECTION',
-  '04 — LIVE 1V1 AND 10-PLAYER BATTLES',
-  '05 — BODY POSTURE & HEALTH CHECK',
-  '06 — SMART FATIGUE PROTECTION',
-  '07 — WORKOUT ANYWHERE OFFLINE',
-  '08 — 100% PRIVATE ON YOUR PHONE',
+export const heroCapabilities: string[] = [
+  'Pose tracking',
+  'Rep counting',
+  'Form correction',
+  'Posture scan',
+  'Ranked battles',
+];
+
+export const tunnelLeft: string[] = [
+  'Pose tracking', 'Rep counting', 'Knee angle', 'Squat depth', 'Elbow angle', 'Hip hinge',
+  'Jump rhythm', 'Hold timer', 'Form score', 'Voice cues', 'Tempo', 'Balance',
+  'Fatigue watch', 'Spine check', 'Shoulder level', 'Knee valgus', 'Foot angle', 'Calories',
+  'Offline mode', '33 landmarks',
+];
+
+export const tunnelRight: string[] = [
+  'Human vs AI', 'Quick Duel', 'Battle Ground', 'Friend invites', 'Squads', 'Arena',
+  'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Immortal',
+  'XP', 'Coins', '3D avatars', 'Outfits', 'Streaks', 'Daily challenges',
+  'Leaderboards', 'Achievements',
+];
+
+export const tickerItems: string[] = [
+  'On-device pose tracking',
+  'Automatic rep counting',
+  'Live form correction',
+  'Human vs AI duels',
+  'Live 1v1 battles',
+  '3D avatars and shop',
+  'Squads and leagues',
+  'Posture scanner',
+  'Tree Pose hold classifier',
+  'Daily streaks',
+  'Works offline',
 ];
 
 export const systemCards: SystemCard[] = [
   {
     num: '01',
-    title: 'AI CAMERA TRACKING',
+    title: 'Camera coach',
     description:
-      'Set your phone up and start moving. Your camera tracks your body, counts every clean repetition, and gives you instant audio and visual tips to correct your form.',
-    tags: ['Real-time posture tips', 'Automatic rep counts', 'No wearables needed'],
-    link: { label: 'SEE HOW IT WORKS ->', href: '#how' },
+      'Prop your phone up and move. Ojas follows 33 points on your body, counts every clean rep, and tells you out loud when your knees cave or your back rounds.',
+    tags: ['33-point pose tracking', 'Auto rep count', 'Voice and on-screen tips'],
+    link: { label: 'How it works', href: '#how' },
   },
   {
     num: '02',
-    title: 'LIVE BATTLES & GAMES',
+    title: 'Battles and ranks',
     description:
-      'Turn your regular exercise into a game. Train alone, follow an AI coach, duel a friend in a live 1v1 match, or join group battles with up to 10 players.',
-    tags: ['Solo training', 'Live 1v1 duels', '10-Player room battles', 'XP & leaderboards'],
-    link: { label: 'EXPLORE GAME MODES ->', href: '#modes' },
+      'Duel an AI at four difficulty levels, take on a friend in a live 2-minute split-screen match, or climb a Battle Ground leaderboard. Every rep earns XP, coins and rank.',
+    tags: ['Human vs AI', 'Live 1v1', 'Squads', 'Bronze to Immortal'],
+    link: { label: 'See the modes', href: '#modes' },
   },
   {
     num: '03',
-    title: 'POSTURE & HEALTH CHECK',
+    title: 'Posture scanner',
     description:
-      'Screen your body for common posture issues like knock knees or foot misalignment before you train, and get guided corrective exercises to keep you healthy.',
-    tags: ['Knock knee check', 'Foot balance check', 'Corrective exercise plans'],
-    link: { label: 'CHECK YOUR HEALTH ->', href: '#health' },
+      'A 3-second full-body scan checks shoulder level, hips and pelvis, knee alignment and spine. Ojas then builds a short daily routine to fix what it finds.',
+    tags: ['3-second scan', 'Knee valgus check', 'Corrective plans'],
+    link: { label: 'Try the scanner', href: '#health' },
+  },
+];
+
+export const appScreens: AppScreen[] = [
+  {
+    id: 'home',
+    src: '/screens/home_screen.webp',
+    title: 'Home feed',
+    caption: 'Week calendar, energy burned, daily challenges and the 3-second posture check, one tap away.',
+  },
+  {
+    id: 'tracking',
+    src: '/screens/ai_rep_tracking.webp',
+    title: 'Live rep tracking',
+    caption: 'The camera overlay draws your skeleton and counts reps as you move. Here: squats with the AI Tutor.',
+  },
+  {
+    id: 'scan',
+    src: '/screens/ai_body_scan.webp',
+    title: 'Posture scanner',
+    caption: 'Shoulders, hips and knees are checked against level lines while you hold still for three seconds.',
+  },
+  {
+    id: 'versus',
+    src: '/screens/human_vs_ai.webp',
+    title: 'Human vs AI',
+    caption: 'A 2-minute duel against an AI opponent that paces itself to the difficulty you pick.',
+  },
+  {
+    id: 'catalog',
+    src: '/screens/exercise_catalog.webp',
+    title: 'Exercise catalog',
+    caption: 'Strength moves and yoga poses, each with the angles the AI checks before you start.',
   },
 ];
 
 export const gameModes: GameMode[] = [
   {
     id: 'solo',
-    title: 'Solo Workout',
-    players: '1 Player',
-    description:
-      'Train at your own pace with automatic rep counts and live posture advice on every set.',
-    badge: 'Offline Supported',
+    title: 'Solo Training',
+    players: '1 player',
+    description: 'Train at your own pace with automatic rep counts and form tips on every set.',
+    badge: 'Works offline',
   },
   {
     id: 'ai-tutor',
-    title: 'AI Fitness Tutor',
-    players: 'Personal Coach',
-    description:
-      'Follow your personal AI coach who guides your movements and keeps you motivated.',
-    badge: 'Guided Training',
+    title: 'AI Tutor',
+    players: 'Guided',
+    description: 'A coach that calls out each phase of the movement — top, down, hold — and keeps you on tempo.',
+    badge: 'Voice coaching',
   },
   {
     id: 'human-vs-ai',
     title: 'Human vs AI',
-    players: '1 vs AI Bot',
-    description:
-      'Test your speed, stamina, and clean form against an adaptive AI challenger.',
-    badge: 'Competitive',
+    players: '1 vs bot',
+    description: 'A 2-minute battle against an AI opponent with live rep and calorie comparison.',
+    badge: '4 difficulty levels',
+    details: ['Beginner', 'Intermediate', 'Advanced', 'Pro'],
   },
   {
-    id: '1v1-match',
-    title: 'Direct 1v1 Match',
-    players: '2 Players',
+    id: 'quick-duel',
+    title: 'Quick Duel',
+    players: '1 vs 1',
     description:
-      'Challenge a friend to a live match. See who finishes cleaner reps in real time.',
-    badge: 'Live Multiplayer',
+      'Live split-screen match against a friend or a matched player. If nobody is free, a level-matched opponent steps in so you never wait.',
+    badge: 'Live multiplayer',
+    details: ['2-min rounds', 'Versus intro', 'Synced scoreboard'],
   },
   {
     id: 'battleground',
-    title: 'Battleground',
-    players: 'Up to 10 Players',
-    description:
-      'Join an open multiplayer room with friends or classmates and race for the top spot.',
-    badge: 'Group Competition',
+    title: 'Battle Ground',
+    players: 'Up to 10',
+    description: 'An open free-for-all room. Everyone does the same move; the live leaderboard decides.',
+    badge: 'Group race',
   },
   {
     id: 'friend-challenge',
     title: 'Friend Challenge',
-    players: 'Custom Room',
+    players: 'Invite',
+    description: 'Add fitness friends and send a one-tap battle invite straight from your list.',
+    badge: 'Social',
+  },
+];
+
+export const rankTiers: RankTier[] = [
+  { level: 1, title: 'Rookie', tier: 'Bronze', color: '#CD7F32', points: '0 – 99' },
+  { level: 2, title: 'Challenger', tier: 'Silver', color: '#C7C7CC', points: '100 – 249' },
+  { level: 3, title: 'Warrior', tier: 'Gold', color: '#D9A441', points: '250 – 499' },
+  { level: 4, title: 'Master', tier: 'Platinum', color: '#DCD6CC', points: '500 – 999' },
+  { level: 5, title: 'Champion', tier: 'Diamond', color: '#F1ECE4', points: '1,000 – 1,999' },
+  { level: 6, title: 'Grandmaster', tier: 'Immortal', color: '#C2283A', points: '2,000+' },
+];
+
+export const progression: ProgressionFeature[] = [
+  {
+    kicker: 'Avatar shop',
+    title: 'Your 3D character',
     description:
-      'Create private workout rooms and send invite links straight to your friends.',
-    badge: 'Social Fitness',
+      'Your avatar stands in your profile wearing its current outfit, hair and accessory. Try anything on the 3D model before you buy it.',
+    points: ['Characters, outfits, hair, accessories', '1 coin for every 10 XP', 'Separate loadout per character'],
+  },
+  {
+    kicker: 'Squads',
+    title: 'Train as a crew',
+    description:
+      'Squads have their own level and Squad Power, a top-3 podium, a ranked roster and Arena tournaments. Leagues are marked with fortress crests.',
+    points: ['Squad Power ranking', 'Arena tournaments', 'League crests'],
+  },
+  {
+    kicker: 'Streaks',
+    title: 'Keep the fire lit',
+    description:
+      'A daily streak screen with a week chain and milestone progress. Optional reminders at 7:00 PM and 9:30 PM open straight into Train.',
+    points: ['Week chain and milestones', 'Evening reminders', 'Daily challenges'],
   },
 ];
 
 export const healthFeatures: HealthFeature[] = [
   {
     id: 'knock-knee',
-    title: 'Knock Knee Screening (Knee Valgus)',
-    tag: 'Joint Alignment',
-    description:
-      'Checks if your knees turn inward when you stand or squat, catching problems early before they cause pain.',
-    solution:
-      'Gives you simple hip and glute strengthening exercises to straighten your posture.',
+    title: 'Knock knee screening',
+    tag: 'Knee valgus',
+    description: 'Checks whether your knees drift inward when you stand or squat, before it turns into pain.',
+    solution: 'Hip and glute strengthening drills to pull the knees back over the toes.',
+  },
+  {
+    id: 'pelvis',
+    title: 'Shoulder and pelvis level',
+    tag: 'Alignment',
+    description: 'Compares the height of both shoulders and both hips to spot tilt and uneven loading.',
+    solution: 'Targeted stretches and single-side work to even things out.',
   },
   {
     id: 'duck-foot',
-    title: 'Duck Foot Check (Out-Toeing)',
-    tag: 'Foot Balance',
-    description:
-      'Spots if your feet point outward while moving, helping you restore natural balance and walking posture.',
-    solution:
-      'Guides you through gentle calf stretches, hip rotations, and ankle mobility drills.',
+    title: 'Duck foot check',
+    tag: 'Foot balance',
+    description: 'Spots feet that point outward while you move, which throws off knee and hip tracking.',
+    solution: 'Calf stretches, hip rotations and ankle mobility drills.',
   },
   {
     id: 'fatigue-monitor',
-    title: 'Smart Fatigue & Form Drop Monitor',
-    tag: 'Safety & Protection',
-    description:
-      'Watches your movement speed and balance to notice when your muscles are tired.',
-    solution:
-      'Prompts you to take a rest break or slow down so you never injure yourself.',
-  },
-  {
-    id: 'goal-nutrition',
-    title: 'Goal & Nutrition Alignment',
-    tag: 'Your Daily Goal',
-    description:
-      'Choose your goal: Lose Weight, Maintain Fitness, or Build Muscle.',
-    solution:
-      'Automatically adjusts your workout targets and daily nutrition advice to match your goal.',
+    title: 'Fatigue and form drop',
+    tag: 'Safety',
+    description: 'Watches your speed and balance through a set and notices when your form starts to slip.',
+    solution: 'Prompts a rest or a slower tempo before tired reps become injuries.',
   },
 ];
 
-export const planPoints: PlanPoint[] = [
-  {
-    kicker: '01 / YOUR PROFILE',
-    title: 'Track Your Streak & Level',
-    description:
-      'See your daily workout streak, XP level, total reps, and battle record in one easy place.',
-  },
-  {
-    kicker: '02 / YOUR GOAL',
-    title: 'Custom Plans For You',
-    description:
-      'Select Weight Loss, Maintenance, or Muscle Gain to get routines tailored for your needs.',
-  },
-  {
-    kicker: '03 / FORM TARGETS',
-    title: 'Clear Movement Guides',
-    description:
-      'Look at target angles and posture guidelines before you start each workout.',
-  },
-  {
-    kicker: '04 / REAL-TIME COACH',
-    title: 'Instant Voice & Visual Tips',
-    description:
-      'Hear audio cues and see on-screen warnings whenever you need to adjust your posture.',
-  },
-  {
-    kicker: '05 / MATCH SCORES',
-    title: 'Points and Leaderboards',
-    description:
-      'Check your form scores, total repetitions, points earned, and rise up the ranks.',
-  },
-  {
-    kicker: '06 / SMOOTH & COOL',
-    title: 'Works Smoothly On Any Phone',
-    description:
-      'Automatically tunes itself to your phone so it runs smoothly without heating up your battery.',
-  },
+export const scanChecks = [
+  { label: 'Shoulders', value: 'Level', ok: true },
+  { label: 'Hips & pelvis', value: 'Tilted', ok: false },
+  { label: 'Knees', value: 'Caving in', ok: false },
+  { label: 'Spine', value: 'Straight', ok: true },
 ];
 
 export const exercises: Exercise[] = [
   {
     id: 'squats',
     title: 'Squats',
-    meta: 'Lower Body Strength · Hip Control · Leg Drive',
-    description:
-      'Build lower body strength with measured knee depth, a flat back, and a controlled return.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/squats-exercise-icon-20519.svg',
+    meta: 'Legs · Glutes · Core',
+    description: 'Full-depth squats with a flat back and a controlled stand.',
+    image: 'https://full-rocket-7cbom.sites.repaint.com/imports/squats-exercise-icon-20519.svg',
     imageAlt: 'Squats illustration',
     videoQuery: 'squats+exercise+proper+form',
-    badge: 'Core Workout',
+    badge: 'Strength',
+    checks: ['Knee bend depth', 'Back posture', 'Standing lockout'],
   },
   {
-    id: 'triangle-pose',
-    title: 'Triangle Pose (Trikonasana)',
-    meta: 'Mobility · Spine Alignment · Leg Balance',
-    description:
-      'Open your hips and stretch your leg lines while keeping steady balance and relaxed breathing.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/triangle-pose-exercise-illustrat-3df06.svg',
-    imageAlt: 'Triangle Pose illustration',
-    videoQuery: 'triangle+pose+yoga+proper+form',
-    badge: 'Yoga & Mobility',
+    id: 'push-ups',
+    title: 'Push-ups',
+    meta: 'Chest · Triceps · Core',
+    description: 'Chest to the floor, arms locked at the top, body in one straight line.',
+    image: '/screens/a-guy-doing-pushups.svg',
+    imageAlt: 'Push-ups illustration',
+    videoQuery: 'push+ups+proper+form',
+    badge: 'Strength',
+    checks: ['Chest drop depth', 'Arm extension', 'Straight core'],
   },
   {
     id: 'lunges',
     title: 'Lunges',
-    meta: 'Single Leg Balance · Knee Stability · Core',
-    description:
-      'Strengthen each leg separately with a clean forward step, 90-degree knee bend, and strong push back.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/lunges-exercise-illustration-b16ba.svg',
+    meta: 'Single leg · Balance · Knees',
+    description: 'A clean step forward, a 90-degree front knee and a strong push back.',
+    image: 'https://full-rocket-7cbom.sites.repaint.com/imports/lunges-exercise-illustration-b16ba.svg',
     imageAlt: 'Lunges illustration',
     videoQuery: 'lunges+exercise+proper+form',
-    badge: 'Core Workout',
+    badge: 'Strength',
+    checks: ['Front knee angle', 'Back knee clearance', 'Vertical spine'],
   },
   {
     id: 'crunches',
     title: 'Crunches',
-    meta: 'Abdominal Strength · Core Control · Tempo',
-    description:
-      'Strengthen your core through a focused upward curl, controlled tempo, and steady form.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/crunches-exercise-icon-ca993.svg',
+    meta: 'Abs · Core control',
+    description: 'A focused curl that works the abs without pulling on the neck.',
+    image: 'https://full-rocket-7cbom.sites.repaint.com/imports/crunches-exercise-icon-ca993.svg',
     imageAlt: 'Crunches illustration',
     videoQuery: 'crunches+exercise+proper+form',
-    badge: 'Core Workout',
+    badge: 'Core',
+    checks: ['Shoulder lift angle', 'Core contraction', 'No neck pulling'],
   },
   {
-    id: 'sit-ups',
-    title: 'Sit-Ups',
-    meta: 'Full Core Power · Hip Connection · Endurance',
+    id: 'tree-pose',
+    title: 'Tree Pose (Vrikshasana)',
+    meta: 'Balance · Hips · Focus',
     description:
-      'Build core endurance with full-range movement, keeping feet flat and your spine protected.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/sit-ups-exercise-illustration-01b38.png',
-    imageAlt: 'Sit-Ups illustration',
-    videoQuery: 'sit+ups+exercise+proper+form',
-    badge: 'Core Workout',
+      'Scored by your longest unbroken hold. An on-device image classifier confirms the stance before the timer starts.',
+    image: '/screens/a-female-doing-yoga.svg',
+    imageAlt: 'Tree Pose illustration',
+    videoQuery: 'tree+pose+vrikshasana+proper+form',
+    badge: 'New · Yoga',
+    checks: ['Standing leg straight', 'Foot placement', 'Best hold time'],
+  },
+  {
+    id: 'triangle-pose',
+    title: 'Triangle Pose (Trikonasana)',
+    meta: 'Mobility · Hips · Spine',
+    description: 'Open the hips and lengthen both sides while keeping steady balance.',
+    image: 'https://full-rocket-7cbom.sites.repaint.com/imports/triangle-pose-exercise-illustrat-3df06.svg',
+    imageAlt: 'Triangle Pose illustration',
+    videoQuery: 'triangle+pose+yoga+proper+form',
+    badge: 'Yoga',
+    checks: ['Leg straightness', 'Lateral hip hinge', 'Arm reach'],
   },
   {
     id: 'bhujangasana',
     title: 'Cobra Pose (Bhujangasana)',
-    meta: 'Back Extension · Chest Opening · Posture Correction',
-    description:
-      'Strengthen your lower back and open your chest with smooth spine extension and shoulder control.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/triangle-pose-exercise-illustrat-3df06.svg',
-    imageAlt: 'Cobra Pose illustration',
+    meta: 'Back extension · Chest',
+    description: 'Strengthen the lower back and open the chest with a smooth lift.',
+    image: '',
+    imageAlt: 'Cobra Pose',
     videoQuery: 'bhujangasana+cobra+pose+proper+form',
-    badge: 'Yoga & Posture',
+    badge: 'Yoga',
+    checks: ['Chest elevation', 'Lower back arch', 'Neck alignment'],
   },
   {
     id: 'balasana',
     title: "Child's Pose (Balasana)",
-    meta: 'Rest & Recovery · Hip Opening · Back Relief',
-    description:
-      'A gentle resting posture that releases tension from your spine, shoulders, and lower body.',
-    image:
-      'https://full-rocket-7cbom.sites.repaint.com/imports/sit-ups-exercise-illustration-01b38.png',
+    meta: 'Recovery · Lower back',
+    description: 'A resting hold that releases the spine, shoulders and hips.',
+    image: '/screens/a-guy-doing-child_pose.svg',
     imageAlt: "Child's Pose illustration",
     videoQuery: 'balasana+childs+pose+proper+form',
-    badge: 'Recovery & Posture',
+    badge: 'Recovery',
+    checks: ['Deep hip rest', 'Arm stretch', 'Hold timer'],
   },
 ];
 
 export const steps: Step[] = [
   {
-    num: '01 / SETUP',
-    title: 'POSITION YOUR PHONE',
-    description:
-      'Place your phone against a wall, water bottle, or stand so your front camera can see you clearly.',
+    num: '01',
+    title: 'Prop your phone',
+    description: 'Lean it on a wall or a bottle about six feet away so the camera sees your whole body.',
   },
   {
-    num: '02 / SELECT',
-    title: 'CHOOSE YOUR WORKOUT',
-    description:
-      'Pick a solo session, follow the AI coach, take a posture check, or challenge a friend to a battle.',
+    num: '02',
+    title: 'Pick a mode',
+    description: 'Solo, AI Tutor, a posture scan, or a battle against the AI, a friend or a full room.',
   },
   {
-    num: '03 / TRAIN',
-    title: 'MOVE WITH LIVE FEEDBACK',
-    description:
-      'Exercise with confidence while your phone counts your clean reps and corrects your posture on the spot.',
+    num: '03',
+    title: 'Move',
+    description: 'Ojas counts clean reps and corrects your form out loud while you train.',
   },
   {
-    num: '04 / ADVANCE',
-    title: 'LEVEL UP & STAY HEALTHY',
-    description:
-      'Collect points, view your health progress, and rise through the ranks on the leaderboard.',
+    num: '04',
+    title: 'Level up',
+    description: 'Earn XP and coins, keep your streak, climb the ranks and kit out your avatar.',
   },
 ];
 
-export const bigStats: StatItem[] = [
+export const releaseNotes: ReleaseNote[] = [
   {
-    value: '06',
-    label: 'Workout & Battle Modes',
-    detail: 'Solo · AI Tutor · Human vs AI · 1v1 Match · Battleground · Friend Challenge',
+    date: '04 Oct 2026',
+    title: '3D avatars, rank emblems and Squads',
+    description:
+      'An offline 3D avatar viewer and shop with live try-on, new Bronze-to-Immortal emblems, a game-style Squad screen with Arena cards, and a new streak screen with evening reminders.',
   },
   {
-    value: '100%',
-    label: 'On-Device Privacy',
-    detail: 'Your camera video never leaves your phone — everything is processed locally',
+    date: '24 Sep 2026',
+    title: 'Tree Pose with an on-device classifier',
+    description:
+      'Tree Pose joins the library. Pose geometry is cross-checked by a 24 MB image model that runs offline on the phone, and you are scored by your best hold time.',
   },
   {
-    value: '0',
-    label: 'Extra Sensors Needed',
-    detail: 'No smartwatches or expensive gym equipment needed — just your smartphone',
+    date: '24 Sep 2026',
+    title: 'Light and dark mode, new home feed',
+    description:
+      'An app-wide theme toggle, a swipeable featured carousel, an activity grid with energy and reps, an animated streak splash and a redesigned match camera setup.',
+  },
+  {
+    date: '24 Sep 2026',
+    title: 'Gamified redesign and instant matchmaking',
+    description:
+      'XP, levels, achievements and level-up celebrations, a live news feed, a versus intro before every match, and a stand-in opponent when nobody is free to play.',
   },
 ];
 
-export const feedItems: FeedItem[] = [
-  {
-    label: 'OJAS ARENA',
-    title: 'Live 1v1 and Group Battles',
-    description:
-      'Challenge friends or workout buddies in live matches. Real-time scoring compares your repetitions and form quality to crown the winner.',
-    tags: ['1V1 BATTLES', '10-PLAYER ROOMS', 'LEADERBOARDS'],
-  },
-  {
-    label: 'HEALTH SCREENING',
-    title: 'Posture & Alignment Check',
-    description:
-      'Spot common alignment problems like knock knees and outward feet early, and follow guided recovery routines to protect your joints.',
-    tags: ['KNOCK KNEE CHECK', 'FOOT BALANCE CHECK', 'CORRECTIVE DRILLS'],
-  },
-  {
-    label: 'OFFLINE & PRIVATE',
-    title: 'Works Anywhere & 100% Private',
-    description:
-      'Workout whenever you want without an internet connection. Your camera video is never uploaded or shared with anyone.',
-    tags: ['OFFLINE MODE', 'ZERO SERVER UPLOAD', 'DATA PRIVACY'],
-  },
+export const techStack: TechItem[] = [
+  { layer: 'Pose engine', value: 'MediaPipe Pose', note: 'On-device, GPU accelerated' },
+  { layer: 'Pose classifier', value: 'ResNet50 · int8 ONNX', note: '24 MB, runs offline in a worker' },
+  { layer: 'Mobile', value: 'React Native · Expo SDK 57', note: 'TypeScript' },
+  { layer: '3D avatars', value: 'three.js · three-vrm', note: 'VRM and GLB, offline viewer' },
+  { layer: 'Live matches', value: 'FastAPI · WebSockets', note: 'Synced reps and scoreboards' },
+  { layer: 'Data & auth', value: 'Supabase', note: 'Database, auth, realtime channels' },
 ];
 
 export const footerColumns: FooterColumn[] = [
   {
-    title: 'OJAS PLATFORM',
+    title: 'Platform',
     links: [
-      { label: 'Overview', href: '#overview' },
-      { label: 'Core Pillars', href: '#pillars' },
-      { label: 'Game Modes', href: '#modes' },
-      { label: 'Exercise Library', href: '#workouts' },
-      { label: 'Health Scanner', href: '#health' },
-      { label: 'How It Works', href: '#how' },
+      { label: 'Engine', href: '#pillars' },
+      { label: 'Game modes', href: '#modes' },
+      { label: 'Ranks & avatars', href: '#ranks' },
+      { label: 'Posture scanner', href: '#health' },
+      { label: 'Exercise library', href: '#workouts' },
+      { label: 'Release notes', href: '#updates' },
     ],
   },
   {
-    title: 'PROJECT RESOURCES',
+    title: 'Resources',
     links: [
       { label: 'Download APK', href: projectLinks.apk },
-      { label: 'GitHub Repository', href: projectLinks.github },
-      { label: 'Watch Video Demo', href: projectLinks.video },
-      { label: 'Live Showcase Site', href: projectLinks.display },
+      { label: 'GitHub repository', href: projectLinks.github },
+      { label: 'Video demo', href: projectLinks.video },
+      { label: 'Showcase site', href: projectLinks.display },
     ],
   },
   {
     title: 'SIH 2026',
     links: [
-      { label: 'Team Ojas26 (ID 141537)', href: '#' },
-      { label: 'Problem ID: SIH26196', href: '#' },
+      { label: 'Team Ojas26 · ID 141537', href: '#' },
+      { label: 'Problem ID SIH26196', href: '#' },
       { label: 'Theme: Fitness & Sports', href: '#' },
       { label: 'Category: Software', href: '#' },
     ],

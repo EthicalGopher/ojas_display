@@ -12,6 +12,7 @@ export type Exercise = {
   imageAlt: string;
   videoQuery: string;
   badge?: string;
+  checks?: string[];
 };
 
 export type SystemCard = {
@@ -20,12 +21,6 @@ export type SystemCard = {
   description: string;
   tags: string[];
   link: { label: string; href: string };
-};
-
-export type PlanPoint = {
-  kicker: string;
-  title: string;
-  description: string;
 };
 
 export type Step = {
@@ -40,13 +35,6 @@ export type StatItem = {
   detail: string;
 };
 
-export type FeedItem = {
-  label: string;
-  title: string;
-  description: string;
-  tags: string[];
-};
-
 export type FooterColumn = {
   title: string;
   links: { label: string; href: string }[];
@@ -58,6 +46,7 @@ export type GameMode = {
   players: string;
   description: string;
   badge: string;
+  details?: string[];
 };
 
 export type HealthFeature = {
@@ -66,4 +55,38 @@ export type HealthFeature = {
   tag: string;
   description: string;
   solution: string;
+};
+
+export type AppScreen = {
+  id: string;
+  src: string;
+  title: string;
+  caption: string;
+};
+
+export type RankTier = {
+  level: number;
+  title: string;
+  tier: string;
+  color: string;
+  points: string;
+};
+
+export type ProgressionFeature = {
+  kicker: string;
+  title: string;
+  description: string;
+  points: string[];
+};
+
+export type ReleaseNote = {
+  date: string;
+  title: string;
+  description: string;
+};
+
+export type TechItem = {
+  layer: string;
+  value: string;
+  note: string;
 };

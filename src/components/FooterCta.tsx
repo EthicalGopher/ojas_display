@@ -1,37 +1,31 @@
-import { Kicker, BtnLink } from './ui';
+import { BtnLink, Kicker } from './ui';
 import { projectLinks, sihDetails } from '../data';
 
 export const FooterCta = () => (
   <section className="footer-cta">
     <div className="container">
-      <Kicker style={{ color: '#fff' }}>GET STARTED TODAY</Kicker>
+      <div className="cta-card">
+      <Kicker>Android · Free</Kicker>
       <h2>
-        READY TO
+        Prop it up.
         <br />
-        TEST YOUR FORM?
+        Press start.
       </h2>
       <p>
-        Download the Android APK to try live pose tracking, posture screening,
-        and multiplayer fitness battles right on your phone.
+        Download the APK and try live rep tracking, the posture scanner and ranked battles on
+        your own phone.
       </p>
-      <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginTop: '25px' }}>
-        <BtnLink
-          href={projectLinks.apk}
-          variant="secondary"
-          style={{ borderColor: '#fff', background: '#fff', color: '#E3522B' }}
-        >
-          DOWNLOAD ANDROID APK &rarr;
+      <div className="hero-actions">
+        <BtnLink href={projectLinks.apk} variant="light">
+          Download APK
         </BtnLink>
-        <BtnLink
-          href={projectLinks.github}
-          variant="secondary"
-          style={{ borderColor: '#fff', color: '#fff' }}
-        >
-          EXPLORE SOURCE CODE &rarr;
+        <BtnLink href={projectLinks.github} variant="ghost-light">
+          Source on GitHub
         </BtnLink>
       </div>
-      <div style={{ marginTop: '24px', fontSize: '13px', opacity: 0.9 }}>
-        {sihDetails.event} · Team ID: {sihDetails.teamId} · Problem ID: {sihDetails.problemId}
+      <div className="cta-meta">
+        {sihDetails.event} · Team {sihDetails.teamId} · {sihDetails.problemId}
+      </div>
       </div>
     </div>
   </section>

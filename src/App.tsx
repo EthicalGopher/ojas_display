@@ -1,30 +1,36 @@
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
 import { Intro } from './components/Intro';
+import { WordTunnel } from './components/WordTunnel';
+import { Hero } from './components/Hero';
+import { Ticker } from './components/Ticker';
 import { SystemSection } from './components/SystemSection';
+import { AppScreens } from './components/AppScreens';
 import { GameModes } from './components/GameModes';
+import { Ranks } from './components/Ranks';
 import { HealthSection } from './components/HealthSection';
 import { Library } from './components/Library';
 import { HowItWorks } from './components/HowItWorks';
-import { BigStats } from './components/BigStats';
-import { Feed } from './components/Feed';
+import { Updates } from './components/Updates';
 import { FooterCta } from './components/FooterCta';
 import { Footer } from './components/Footer';
 
 const App = () => {
   return (
     <>
+      <Intro />
       <Header />
       <main>
         <Hero />
-        <Intro />
+        <Ticker />
+        <WordTunnel />
         <SystemSection />
+        <AppScreens />
         <GameModes />
+        <Ranks />
         <HealthSection />
         <Library />
         <HowItWorks />
-        <BigStats />
-        <Feed />
+        <Updates />
         <FooterCta />
       </main>
       <Footer />

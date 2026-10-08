@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import type { NavLink } from '../types';
 import { navLinks, projectLinks, sihDetails } from '../data';
 import { getContent } from '../lib/contentApi';
@@ -33,44 +33,15 @@ export const Header = () => {
   return (
     <header className="nav">
       <div className="container nav-inner">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <a href="#" className="logo">
-            OJAS
-          </a>
-          <span
-            style={{
-              fontSize: '11px',
-              background: '#37373a',
-              border: '1px solid rgba(255,255,255,0.18)',
-              padding: '3px 8px',
-              borderRadius: '4px',
-              color: '#fff',
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-            }}
-          >
+        <a href="#" className="brand" aria-label="OJAS home">
+          <img src="/logo.svg" alt="" />
+          <b>OJAS</b>
+          <span className="brand-chip">
             {sihDetails.teamName} · SIH 2026
           </span>
-        </div>
+        </a>
 
-        <nav
-          className="nav-links"
-          style={{
-            display: menuOpen ? 'flex' : '',
-            ...(menuOpen
-              ? {
-                  position: 'absolute',
-                  top: '76px',
-                  left: '0',
-                  right: '0',
-                  padding: '22px',
-                  background: '#2B2B2E',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }
-              : {}),
-          }}
-        >
+        <nav className={`nav-links${menuOpen ? ' open' : ''}`}>
           {navLinks.map((link: NavLink) => (
             <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)}>
               {link.label}
@@ -78,15 +49,15 @@ export const Header = () => {
           ))}
         </nav>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="nav-right">
           <button
             type="button"
-            className="nav-download"
+            className="btn btn-primary nav-download"
             onClick={handleDownload}
             disabled={loading}
             aria-label="Download OJAS APK"
           >
-            {loading ? 'Loading...' : 'DOWNLOAD APK'}
+            {loading ? 'Loading' : 'Get APK'}
           </button>
           <button
             type="button"
@@ -95,7 +66,7 @@ export const Header = () => {
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
           >
-            MENU
+            {menuOpen ? 'CLOSE' : 'MENU'}
           </button>
         </div>
       </div>

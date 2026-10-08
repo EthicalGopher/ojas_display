@@ -1,33 +1,31 @@
-import { useState, useEffect } from 'react';
-import { Kicker } from './ui';
-import { exercises, planPoints } from '../data';
+import { useEffect, useState } from 'react';
+import { SectionHead } from './ui';
+import { exercises } from '../data';
 import { getContent, type ExerciseRow } from '../lib/contentApi';
-import type { Exercise, PlanPoint } from '../types';
+import type { Exercise } from '../types';
 import { ExerciseCard } from './ExerciseCard';
 
-const mapRow = (row: ExerciseRow): Exercise => ({
-  id: String(row.id),
-  title: row.name,
-  meta: row.muscle_groups,
-  description: row.description,
-  image: row.image_url,
-  imageAlt: row.name,
-  videoQuery: row.name.replace(/\s+/g, '+') + '+exercise+proper+form',
-  badge: 'Core Workout',
-});
+const fallbackById = new Map(exercises.map((e) => [e.title.toLowerCase(), e]));
 
-const exerciseGrid = (display: Exercise[]) => (
-  <div className="exercise-grid" id="workouts">
-    {display.map((exercise: Exercise) => (
-      <ExerciseCard key={exercise.id} exercise={exercise} />
-    ))}
-  </div>
-);
+const mapRow = (row: ExerciseRow): Exercise => {
+  const known = fallbackById.get(row.name.toLowerCase());
+  return {
+    id: String(row.id),
+    title: row.name,
+    meta: row.muscle_groups,
+    description: row.description,
+    image: row.image_url || known?.image || '',
+    imageAlt: row.name,
+    videoQuery: row.name.replace(/\s+/g, '+') + '+exercise+proper+form',
+    badge: known?.badge ?? 'Workout',
+    checks: known?.checks,
+  };
+};
 
 export const Library = () => {
   const [items, setItems] = useState<Exercise[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -37,8 +35,7 @@ export const Library = () => {
           setItems(content.exercises.map(mapRow));
         }
       } catch {
-        setError('Content request failed');
-        setItems(null);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -50,64 +47,31 @@ export const Library = () => {
   const display = items ?? exercises;
 
   return (
-    <section className="library">
+    <section className="library" id="workouts">
       <div className="container">
-        <div className="section-head">
-          <div>
-            <Kicker>YOUR APP &amp; TRAINING PLAN</Kicker>
-            <h2>
-              TRAIN WITH
+        <SectionHead
+          kicker="Exercise library"
+          title={
+            <>
+              Every move,
               <br />
-              CLEAR PURPOSE.
-            </h2>
-          </div>
-          <p>
-            Your app brings your profile, custom workout filters, posture targets,
-            and real-time feedback together into one simple feed.
-          </p>
-        </div>
-        <div className="plan-feature">
-          <div className="plan-photo">
-            <img src="/move-purpose.jpeg" alt="OJAS workout plan preview" />
-          </div>
-          <div className="plan-points">
-            {planPoints.map((point: PlanPoint) => (
-              <article key={point.title} className="plan-point">
-                <div className="point-kicker">{point.kicker}</div>
-                <h3>{point.title}</h3>
-                <p>{point.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-        <div className="exercise-intro">
-          <Kicker>EXERCISE &amp; YOGA LIBRARY</Kicker>
-          <h3>
-            Pick your exercise. Check your posture. Train with real-time feedback.
-          </h3>
-          <p>
-            Choose from a wide variety of strength exercises and yoga routines.
-            Every exercise card shows you the right form and target muscle areas.
-          </p>
-        </div>
+              <em>measured.</em>
+            </>
+          }
+        >
+          Strength work and yoga, each with the angles the AI checks on every rep. New: Tree
+          Pose, scored by your longest steady hold.
+        </SectionHead>
         {loading && items === null ? (
-          <p style={{ color: '#b9b9be' }}>Loading exercises...</p>
-        ) : error && items === null ? (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '18px',
-            }}
-          >
-            <p style={{ color: '#E3522B' }}>
-              Could not load the exercise library. Showing cached data.
-            </p>
-            {exerciseGrid(display)}
-          </div>
+          <p className="library-note">SYNCING LIBRARY…</p>
         ) : (
-          exerciseGrid(display)
+          error && <p className="library-note">OFFLINE COPY · LIVE LIBRARY UNAVAILABLE</p>
         )}
+        <div className="exercise-grid">
+          {display.map((exercise: Exercise) => (
+            <ExerciseCard key={exercise.id} exercise={exercise} />
+          ))}
+        </div>
       </div>
     </section>
   );
