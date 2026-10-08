@@ -14,6 +14,9 @@ export const SLOTS: Record<string, Slot> = {
   coach: { exercise: 'squat', side: 'right', visible: true },
   battle: { exercise: 'skip', side: 'left', visible: true },
   flow: { exercise: 'swing', side: 'right', visible: true },
+  library: { exercise: 'pushup', side: 'left', visible: true },
+  updates: { exercise: 'warmup', side: 'right', visible: true },
+  finish: { exercise: 'jacks', side: 'right', visible: true },
   hidden: { exercise: 'cycle', side: 'center', visible: false },
 };
 

@@ -47,7 +47,7 @@ export const Library = () => {
   const display = items ?? exercises;
 
   return (
-    <section className="library" id="workouts" data-stage="hidden">
+    <section className="library beside-left" id="workouts" data-stage="library">
       <div className="container">
         <SectionHead
           kicker="Exercise library"

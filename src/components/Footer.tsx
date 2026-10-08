@@ -2,7 +2,7 @@ import { footerColumns, sihDetails } from '../data';
 import type { FooterColumn } from '../types';
 
 export const Footer = () => (
-  <footer>
+  <footer data-stage="hidden">
     <div className="container">
       <div className="footer-grid">
         <div>

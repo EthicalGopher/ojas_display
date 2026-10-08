@@ -2,7 +2,7 @@ import { Reveal, SectionHead } from './ui';
 import { releaseNotes, techStack } from '../data';
 
 export const Updates = () => (
-  <section className="updates" id="updates" data-stage="hidden">
+  <section className="updates beside-right" id="updates" data-stage="updates">
     <div className="container">
       <SectionHead
         kicker="Release notes"

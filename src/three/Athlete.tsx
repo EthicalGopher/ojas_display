@@ -289,6 +289,18 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
       const r = angleAt(landmarks[14], landmarks[12], landmarks[16]);
       angle = Math.min(l, r);
       progress = (165 - angle) / 125;
+    } else if (ex === 'pushup') {
+      const l = angleAt(landmarks[13], landmarks[11], landmarks[15]);
+      const r = angleAt(landmarks[14], landmarks[12], landmarks[16]);
+      angle = Math.min(l, r);
+      progress = (170 - angle) / 85;
+    } else if (ex === 'jacks') {
+      // arm raise: angle at the shoulder between the hip and the wrist
+      angle = angleAt(landmarks[11], landmarks[23], landmarks[15]);
+      progress = (angle - 20) / 140;
+    } else if (ex === 'warmup') {
+      angle = angleAt(landmarks[25], landmarks[23], landmarks[27]);
+      progress = (180 - angle) / 70;
     } else {
       angle = angleAt(landmarks[23], landmarks[11], landmarks[25]);
       progress = (180 - angle) / 90;
