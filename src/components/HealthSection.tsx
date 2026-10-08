@@ -31,7 +31,7 @@ export const HealthSection = () => {
   const { pct, bar } = useScanProgress(inView);
 
   return (
-    <section className="health-section grid-bg" id="health">
+    <section className="health-section grid-bg" id="health" data-stage="hidden">
       <div className="container">
         <SectionHead
           kicker="Posture scanner"

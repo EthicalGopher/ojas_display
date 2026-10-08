@@ -2,7 +2,7 @@ import { BtnLink, Kicker } from './ui';
 import { projectLinks, sihDetails } from '../data';
 
 export const FooterCta = () => (
-  <section className="footer-cta">
+  <section className="footer-cta" data-stage="hidden">
     <div className="container">
       <div className="cta-card">
       <Kicker>Android · Free</Kicker>

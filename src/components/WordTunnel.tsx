@@ -43,7 +43,7 @@ export const WordTunnel = () => {
   );
 
   return (
-    <section className="tunnel" ref={section} aria-label="What Ojas tracks">
+    <section className="tunnel" data-stage="hidden" ref={section} aria-label="What Ojas tracks">
       <div className="tunnel-sticky">
         <span className="tunnel-label tl">( Track )</span>
         <span className="tunnel-label tr">( Compete )</span>

@@ -10,7 +10,7 @@ export const Ranks = () => {
   const [stageRef, inView] = useInView<HTMLDivElement>();
 
   return (
-    <section className="ranks" id="ranks">
+    <section className="ranks" id="ranks" data-stage="hidden">
       <div className="container">
         <SectionHead
           kicker="Progression"

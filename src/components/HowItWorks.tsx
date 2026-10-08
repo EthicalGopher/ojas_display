@@ -3,7 +3,7 @@ import type { Step } from '../types';
 import { Reveal, SectionHead } from './ui';
 
 export const HowItWorks = () => (
-  <section className="how" id="how">
+  <section className="how beside-right" id="how" data-stage="flow">
     <div className="container">
       <SectionHead
         kicker="How it works"

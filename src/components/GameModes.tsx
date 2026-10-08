@@ -3,7 +3,7 @@ import { gameModes } from '../data';
 import type { GameMode } from '../types';
 
 export const GameModes = () => (
-  <section className="modes-section" id="modes">
+  <section className="modes-section beside-left" id="modes" data-stage="battle">
     <div className="container">
       <SectionHead
         kicker="Game modes"

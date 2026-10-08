@@ -1,13 +1,12 @@
-import { Suspense, lazy, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { BtnLink, Kicker } from './ui';
 import { heroCapabilities, heroStats, projectLinks, sihDetails } from '../data';
 import { scrollState } from '../lib/scroll';
+import { stage } from '../lib/stage';
 import { SplitText, gsap, reducedMotion, useGSAP } from '../lib/motion';
 import { INTRO_DONE_EVENT } from './Intro';
-import { useInView } from '../three/useInView';
 import type { PoseStats } from '../three/pose';
 
-const HeroScene = lazy(() => import('../three/HeroScene'));
 
 type HudInfo = {
   num: string;
@@ -68,7 +67,6 @@ const EXERCISE_HUD: Record<PoseStats['exercise'], HudInfo> = {
 };
 
 export const Hero = () => {
-  const [stageRef, inView] = useInView<HTMLDivElement>();
   const reps = useRef<HTMLSpanElement>(null);
   const metricLabel = useRef<HTMLSpanElement>(null);
   const metric = useRef<HTMLElement>(null);
@@ -122,6 +120,12 @@ export const Hero = () => {
 
   const section = useRef<HTMLElement>(null);
 
+  // the athlete lives in the page-wide stage; the HUD listens to her live stats
+  useEffect(() => {
+    stage.listeners.add(onStats);
+    return () => void stage.listeners.delete(onStats);
+  }, [onStats]);
+
   useGSAP(
     () => {
       if (reducedMotion()) return;
@@ -159,14 +163,8 @@ export const Hero = () => {
   );
 
   return (
-    <section className="hero-cine" id="overview" ref={section}>
-      <div className="hero-sticky" ref={stageRef}>
-        <div className="hero-canvas">
-          <Suspense fallback={<div className="stage-fallback">INITIALISING POSE ENGINE</div>}>
-            <HeroScene active={inView} onStats={onStats} />
-          </Suspense>
-        </div>
-
+    <section className="hero-cine" id="overview" ref={section} data-stage="hero">
+      <div className="hero-sticky">
         <h1 className="hero-giant">
           <span className="left">
             Your phone

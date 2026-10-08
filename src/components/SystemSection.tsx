@@ -58,7 +58,7 @@ const untilt = (e: MouseEvent<HTMLElement>) => {
 };
 
 export const SystemSection = () => (
-  <section className="pillars grid-bg" id="pillars">
+  <section className="pillars beside-right" id="pillars" data-stage="coach">
     <div className="container">
       <SectionHead
         kicker="The engine"

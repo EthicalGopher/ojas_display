@@ -23,7 +23,7 @@ export const AppScreens = () => {
   const current = appScreens[active];
 
   return (
-    <section className="screens" id="screens">
+    <section className="screens" id="screens" data-stage="hidden">
       <div className="container">
         <SectionHead
           kicker="Inside the app"

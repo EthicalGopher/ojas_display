@@ -2,11 +2,12 @@ import { Suspense, useMemo, useRef, type ReactNode } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { ContactShadows, Environment, Float, Grid, Lightformer, Sparkles } from '@react-three/drei';
 import { Bloom, EffectComposer, Noise, Vignette } from '@react-three/postprocessing';
-import { AdditiveBlending, Color, DoubleSide, Vector3, type Group, type Mesh } from 'three';
+import { AdditiveBlending, Color, DoubleSide, Vector3, type Group, type Mesh, type PerspectiveCamera } from 'three';
 import { PoseFigure } from './PoseFigure';
 import { Dumbbell, Kettlebell, WeightPlate } from './Gear';
 import { palette } from './palette';
-import { CYCLE, SEGMENT, createLandmarks, type PoseMode, type PoseStats } from './pose';
+import { SEGMENT, createLandmarks, type PoseMode, type PoseStats } from './pose';
+import { currentExercise, stage } from '../lib/stage';
 import { Athlete } from './Athlete';
 import { prefersReducedMotion } from './useInView';
 import { scrollState } from '../lib/scroll';
@@ -33,16 +34,24 @@ const SHOTS: Record<string, Shot> = {
   scan: { pos: [0, 1.15, 3.9], look: [0, 0.9, 0] },
 };
 
-/** Glides between shots like a dolly, with a slow orbit and a little pointer parallax. */
+const UP = new Vector3(0, 1, 0);
+
+/**
+ * Glides between shots like a dolly, with a slow orbit and a little pointer parallax.
+ * In the page-wide stage it also slides the frame so she stands beside each
+ * section's content, and turns the camera as the visitor scrolls.
+ */
 const Director = ({ cycle }: { cycle: boolean }) => {
   const look = useMemo(() => new Vector3(0, 0.9, 0), []);
   const target = useMemo(() => new Vector3(), []);
   const lookTarget = useMemo(() => new Vector3(), []);
+  const side = useRef(0);
   useFrame(({ pointer, camera, size, clock }, delta) => {
     const t = clock.getElapsedTime();
-    const ex = cycle ? CYCLE[Math.floor(t / SEGMENT) % CYCLE.length] : 'scan';
+    const ex = cycle ? currentExercise(t) : 'scan';
     const shot = SHOTS[ex];
-    const local = cycle ? (t % SEGMENT) / SEGMENT : 0;
+    const inHero = !cycle || stage.slot.exercise === 'cycle';
+    const local = cycle && inHero ? (t % SEGMENT) / SEGMENT : 0;
     // tall/narrow stages pull back so the whole body stays in frame
     const pull = size.width / size.height < 1 ? 1.22 : 1;
     // slow push-in across each shot
@@ -50,14 +59,23 @@ const Director = ({ cycle }: { cycle: boolean }) => {
     target.set(...shot.pos).multiplyScalar(pull * push);
     target.x += pointer.x * 0.35;
     target.y += pointer.y * 0.18;
-    // gentle orbit drift, plus a half-orbit as the visitor scrolls through the hero
-    const drift = Math.sin(t * 0.25) * 0.25 + (cycle ? scrollState.hero * 1.6 : 0);
-    target.applyAxisAngle(new Vector3(0, 1, 0), drift);
+    // gentle orbit drift, plus a turn as the visitor scrolls (half-orbit through the hero)
+    const scrolled = !cycle ? 0 : inHero ? scrollState.hero * 1.6 : (stage.progress - 0.5) * 1.4;
+    const drift = Math.sin(t * 0.25) * 0.25 + scrolled;
+    target.applyAxisAngle(UP, drift);
     lookTarget.set(...shot.look);
     const k = Math.min(1, delta * 1.6);
     camera.position.lerp(target, k);
     look.lerp(lookTarget, k);
     camera.lookAt(look);
+
+    // slide the rendered frame so she stands to one side of the section's content
+    if (!cycle) return;
+    const wide = size.width >= 1080;
+    const want = !wide ? 0 : stage.slot.side === 'right' ? 0.24 : stage.slot.side === 'left' ? -0.24 : 0;
+    side.current += (want - side.current) * Math.min(1, delta * 2.2);
+    const cam = camera as PerspectiveCamera;
+    cam.setViewOffset(size.width, size.height, -side.current * size.width, 0, size.width, size.height);
   });
   return null;
 };

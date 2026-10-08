@@ -168,7 +168,7 @@ section{position:relative;padding:120px 0}
 @keyframes ticker{to{transform:translateX(-50%)}}
 
 /* PILLARS */
-.pillars{background:var(--ink)}
+.pillars{background:transparent}
 .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .pillar{
   position:relative;padding:34px 30px 30px;min-height:420px;display:flex;flex-direction:column;
@@ -221,7 +221,7 @@ section{position:relative;padding:120px 0}
 .icon-btn:hover{border-color:var(--ember);color:var(--ember)}
 
 /* MODES */
-.modes-section{background:var(--ink)}
+.modes-section{background:transparent}
 .modes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .mode-card{
   position:relative;padding:30px 28px;min-height:260px;display:flex;flex-direction:column;gap:14px;
@@ -312,7 +312,7 @@ section{position:relative;padding:120px 0}
 .library-note{font-family:var(--mono);font-size:12px;color:var(--dim);margin-bottom:18px;letter-spacing:.06em}
 
 /* HOW */
-.how{background:var(--ink)}
+.how{background:transparent}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:step}
 .step{position:relative;padding:30px 26px 10px 0}
 .step-line{display:flex;align-items:center;gap:10px;margin-bottom:34px}
@@ -370,11 +370,28 @@ footer{background:var(--ink);padding:64px 0 28px;border-top:1px solid var(--line
 .footer-links a:hover{color:var(--bone)}
 .footer-bottom{border-top:1px solid var(--line);margin-top:48px;padding-top:18px;display:flex;justify-content:space-between;gap:16px;color:var(--dim);font-family:var(--mono);font-size:11.5px;letter-spacing:.06em}
 
+/* ATHLETE STAGE — one fixed 3D layer behind the page; she follows the visitor down it */
+.athlete-stage{position:fixed;inset:0;z-index:0;transition:opacity .7s ease}
+.athlete-stage canvas{display:block}
+#smooth-wrapper{position:relative;z-index:1}
+@media(min-width:1081px){
+  .beside-right .container{padding-right:min(46%,600px)}
+  .beside-left .container{padding-left:min(46%,600px)}
+  .beside-right .section-head,.beside-left .section-head{grid-template-columns:1fr;gap:16px}
+  .beside-right .pillar-grid{grid-template-columns:1fr}
+  .beside-right .pillar{min-height:0}
+  .beside-right .pillar-icon{height:84px;margin:18px 0 12px}
+  .beside-left .modes-grid{grid-template-columns:1fr 1fr}
+  .beside-right .steps{grid-template-columns:1fr 1fr;row-gap:24px}
+}
+/* narrower screens: no room beside the content, so she fades back behind it */
+@media(max-width:1080px){
+  .athlete-stage.side-left,.athlete-stage.side-right{opacity:.22}
+}
+
 /* CINEMATIC HERO — pinned full-bleed stage, scroll orbits the camera */
-.hero-cine{position:relative;height:100svh;padding:0;background:var(--ink);overflow:hidden}
+.hero-cine{position:relative;height:100svh;padding:0;overflow:hidden}
 .hero-sticky{position:relative;height:100svh;overflow:hidden}
-.hero-canvas{position:absolute;inset:0}
-.hero-canvas canvas{display:block}
 .hero-sticky::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(to bottom,rgba(11,10,9,.55),transparent 22%,transparent 70%,rgba(11,10,9,.85))

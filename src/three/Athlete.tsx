@@ -13,7 +13,8 @@ import {
   type Mesh,
   type Object3D,
 } from 'three';
-import { CYCLE, SEGMENT, body, type Exercise, type PoseStats } from './pose';
+import { SEGMENT, body, type Exercise, type PoseStats } from './pose';
+import { currentExercise } from '../lib/stage';
 
 /**
  * Jody, a Mixamo character, with real Mixamo mocap clips baked in by
@@ -254,7 +255,7 @@ export const Athlete = ({ landmarks, mode, stats, onStats }: Props) => {
       return;
     }
     const t = clock.getElapsedTime();
-    const ex = CYCLE[Math.floor(t / SEGMENT) % CYCLE.length];
+    const ex = currentExercise(t);
     const tr = track.current;
     if (ex !== tr.current) {
       const next = actions[ex];

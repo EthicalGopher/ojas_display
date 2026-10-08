@@ -1,6 +1,7 @@
 import { Header } from './components/Header';
 import { ScrollSmoother, reducedMotion, scrollToHash, useGSAP } from './lib/motion';
 import { Intro } from './components/Intro';
+import { AthleteStage } from './components/AthleteStage';
 import { WordTunnel } from './components/WordTunnel';
 import { Hero } from './components/Hero';
 import { Ticker } from './components/Ticker';
@@ -61,6 +62,8 @@ const App = () => {
           <Footer />
         </div>
       </div>
+      {/* fixed behind the content; mounted last so the section pins exist when it measures */}
+      <AthleteStage />
     </>
   );
 };
